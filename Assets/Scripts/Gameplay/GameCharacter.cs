@@ -46,6 +46,7 @@ public class GameCharacter : MonoBehaviour
             }
             else
             {
+                if (selection) selection.HandleSelected(false);
                 selection = value;
                 selection.HandleSelected(true);
             }
@@ -86,12 +87,11 @@ public class GameCharacter : MonoBehaviour
         Debug.Log(position.X + " " + position.Z + " " + path.Count + " " + target.X + " " + target.Z);
         if (path.Count > 0)
         {
-            for (int i = 0; i < path.Count; i++)
-            {
-                Debug.Log(path[i].X + ":" + path[i].Z);
-            }
             tween = LeanTween.move(gameObject, path[0].GetWorldPos(), moveTime);
+            tween.setEase(LeanTweenType.easeInOutQuad);
+            position.occupant = null;
             position = path[0];
+            position.occupant = gameObject;
             pathIndex = 0;
             tween.onComplete = () =>
             {
@@ -103,13 +103,19 @@ public class GameCharacter : MonoBehaviour
     void OnCompletePathStep()
     {
         pathIndex++;
-        Debug.Log("OnCompletePathStep " + pathIndex + "/" + path.Count);
-        if (pathIndex < path.Count)
+        
+        if (pathIndex < path.Count 
+            && GamePlay.Instance.CurrentPlayer != null
+            && GamePlay.Instance.CurrentPlayer.characters.Contains(this) 
+            && GamePlay.Instance.State == GamePlay.GameplayState.Playing)
         {
             if (tween != null) LeanTween.cancel(tween.id);
 
             tween = LeanTween.move(gameObject, path[pathIndex].GetWorldPos(), moveTime);
+            tween.setEase(LeanTweenType.easeInOutQuad);
+            position.occupant = null;
             position = path[pathIndex];
+            position.occupant = gameObject;
             Debug.Log(position.X + " " + position.Z);
             var lookPos = path[pathIndex].GetWorldPos();
             lookPos.y = transform.position.y;

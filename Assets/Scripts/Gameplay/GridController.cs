@@ -24,6 +24,7 @@ public class GridController : MonoBehaviour
     {
         CreateLines();
         CreateCells();
+        OccupyCells();
     }
 
     void CreateLines()
@@ -102,9 +103,9 @@ public class GridController : MonoBehaviour
     {
         GridPosition pos = null;
 
-        for (int x = 0; x < points.Length; x++)
+        for (int x = 0; x < points.GetLength(0); x++)
         {
-            for (int z = 0; z < points.GetLongLength(1); z++)
+            for (int z = 0; z < points.GetLength(1); z++)
             {
                 if (points[x,z].ContainsPoint(position))
                 {
@@ -116,5 +117,25 @@ public class GridController : MonoBehaviour
         }
 
         return pos;
+    }
+
+    private void OccupyCells()
+    {
+        for (int x = 0; x < points.GetLength(0); x++)
+        {
+            for (int z = 0; z < points.GetLength(1); z++)
+            {
+                var col = points[x, z].GetComponent<Collider>();
+                RaycastHit hit;
+                Ray ray = new Ray(points[x, z].transform.position + Vector3.up, -Vector3.up);
+                if (Physics.Raycast(ray, out hit, 10))
+                {
+                    if (hit.collider.gameObject != points[x, z].gameObject)
+                    {
+                        points[x, z].occupant = hit.collider.gameObject;
+                    }
+                }
+            }
+        }
     }
 }

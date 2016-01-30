@@ -19,6 +19,8 @@ public class GridPosition : MonoBehaviour
         gameObject.name = "Cell " + X + " " + Z;
     }
 
+    public GameObject occupant;
+
     public Vector3 GetWorldPos()
     {
         return gridOffset + gridCellSize * new Vector3(X, 0, Z);
@@ -33,7 +35,7 @@ public class GridPosition : MonoBehaviour
 
     public bool IsWalkable()
     {
-        return enabled;
+        return occupant == null;
     }
 
     public int MovementCost()
