@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public class GamePlay : MonoBehaviour
 {
@@ -42,25 +44,32 @@ public class GamePlay : MonoBehaviour
         StrandedPlayer = CreateStrandedPlayer();
         DeepOnesPlayer = CreateDeepOnesPlayer();
 
-        var characters = FindObjectsOfType<GameCharacter>();
-
-        for (int i = 0; i < characters.Length; i++)
-        {
-            if (characters[i].gameObject.tag.ToLower() == "stranded")
-            {
-                StrandedPlayer.characters.Add(characters[i]);
-            }
-            else if (characters[i].gameObject.tag.ToLower() == "deepone")
-            {
-                DeepOnesPlayer.characters.Add(characters[i]);
-            }
-        }
-
         ritual = new Ritual();
         ritual.pattern = new Ritual.Point[3];
         ritual.pattern[0] = new Ritual.Point(0, 0);
         ritual.pattern[1] = new Ritual.Point(1, 0);
         ritual.pattern[2] = new Ritual.Point(2, 0);
+
+        var characters = RandomPermutation(FindObjectsOfType<GameCharacter>());
+
+        foreach (var character in characters)
+        {
+            if (character.gameObject.tag.ToLower() == "stranded")
+            {
+                StrandedPlayer.characters.Add(character);
+            }
+            else if (character.gameObject.tag.ToLower() == "deepone")
+            {
+                if (DeepOnesPlayer.characters.Count < ritual.pattern.Length)
+                {
+                    DeepOnesPlayer.characters.Add(character);
+                }
+                else
+                {
+                    Destroy(character.gameObject);
+                }
+            }
+        }
 
         StartGame();
     }
@@ -178,5 +187,24 @@ public class GamePlay : MonoBehaviour
             CurrentPlayer = DeepOnesPlayer;
         }
         GameCharacter.Selection = null;
+    }
+
+    public static IEnumerable<T> RandomPermutation<T>(IEnumerable<T> sequence)
+    {
+        T[] retArray = sequence.ToArray();
+        System.Random random = new System.Random();
+
+        for (int i = 0; i < retArray.Length - 1; i += 1)
+        {
+            int swapIndex = random.Next(i, retArray.Length);
+            if (swapIndex != i)
+            {
+                T temp = retArray[i];
+                retArray[i] = retArray[swapIndex];
+                retArray[swapIndex] = temp;
+            }
+        }
+
+        return retArray;
     }
 }
