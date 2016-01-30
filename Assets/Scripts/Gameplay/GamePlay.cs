@@ -14,6 +14,8 @@ public class GamePlay : MonoBehaviour
         GameOver = 5
     }
 
+    public static event System.Action GamestateChanged;
+
     private static GamePlay instance;
     public static GamePlay Instance
     {
@@ -32,8 +34,22 @@ public class GamePlay : MonoBehaviour
     public Player DeepOnesPlayer { get; private set; }
     public Player CurrentPlayer;
 
-    public GameplayState State { get; private set; }
-
+    private GameplayState state;
+    public GameplayState State
+    {
+        get
+        {
+            return state;
+        }
+        private set
+        {
+            if (value != state)
+            {
+                state = value;
+                if (GamestateChanged != null) GamestateChanged();
+            }
+        }
+    }
     public GridController grid;
 
     public Ritual ritual;
