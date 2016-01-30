@@ -16,6 +16,17 @@ public class GameCharacter : MonoBehaviour
         }
     }
 
+    [SerializeField]
+    private int movementPoints;
+    private int usedMovementPoints;
+    public int MovementLeft
+    {
+        get
+        {
+            return movementPoints - usedMovementPoints;
+        }
+    }
+
     public static event System.Action<SelectionEvent> Selected;
 
     LTDescr tween;
@@ -58,6 +69,25 @@ public class GameCharacter : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        GamePlay.GamestateChanged += GamePlay_GamestateChanged;
+    }
+
+    void OnDisable()
+    {
+        GamePlay.GamestateChanged -= GamePlay_GamestateChanged;
+    }
+
+    private void GamePlay_GamestateChanged()
+    {
+        if (GamePlay.Instance.State == GamePlay.GameplayState.Playing
+            && GamePlay.Instance.CurrentPlayer.characters.Contains(this))
+        {
+            Reset();
+        }
+    }
+
     private GridPosition position;
     public GridPosition Position
     {
@@ -77,11 +107,7 @@ public class GameCharacter : MonoBehaviour
 
     [SerializeField]
     private GameObject selectionIndicator;
-
-    void Start()
-    {
-        Debug.Log("selectionIndicator", selectionIndicator);
-    }
+    
     public void HandleSelected(bool selected)
     {
         selectionIndicator.SetActive(selected);
@@ -89,6 +115,12 @@ public class GameCharacter : MonoBehaviour
 
     public void MoveTowards(GridPosition target)
     {
+        if (MovementLeft <= 0)
+        {
+            if (selection == this) selection = null;
+            return;
+        }
+
         if (tween != null) LeanTween.cancel(tween.id);
 
         var lookPos = target.GetWorldPos();
@@ -99,6 +131,7 @@ public class GameCharacter : MonoBehaviour
 
         if (path.Count > 0)
         {
+            usedMovementPoints++;
             tween = LeanTween.move(gameObject, path[0].GetWorldPos(), moveTime);
             tween.setEase(LeanTweenType.easeInOutQuad);
             Position.occupant = null;
@@ -119,7 +152,8 @@ public class GameCharacter : MonoBehaviour
         if (pathIndex < path.Count 
             && GamePlay.Instance.CurrentPlayer != null
             && GamePlay.Instance.CurrentPlayer.characters.Contains(this) 
-            && GamePlay.Instance.State == GamePlay.GameplayState.Playing)
+            && GamePlay.Instance.State == GamePlay.GameplayState.Playing
+            && MovementLeft > 0)
         {
             if (tween != null) LeanTween.cancel(tween.id);
 
@@ -131,6 +165,7 @@ public class GameCharacter : MonoBehaviour
             var lookPos = path[pathIndex].GetWorldPos();
             lookPos.y = transform.position.y;
             transform.LookAt(lookPos);
+            usedMovementPoints++;
 
             tween.onComplete = OnCompletePathStep;
         }
@@ -138,5 +173,10 @@ public class GameCharacter : MonoBehaviour
         {
             path = null;
         }
+    }
+
+    private void Reset()
+    {
+        usedMovementPoints = 0;
     }
 }
