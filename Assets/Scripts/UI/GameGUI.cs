@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GameGUI : MonoBehaviour 
 {
+    public GameObject optionsPanel;
+
     public enum GUIState
     {
         Hidden,
@@ -40,7 +42,13 @@ public class GameGUI : MonoBehaviour
     public void OpenOptions()
     {
         // TODO: open options view
+        optionsPanel.SetActive(true);
         State = GUIState.Options;
+    }
+
+    public void CloseOptions()
+    {
+        optionsPanel.SetActive(false);
     }
 
     public void OpenGameGUI()
