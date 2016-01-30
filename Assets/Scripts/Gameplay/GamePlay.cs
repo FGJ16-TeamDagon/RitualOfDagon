@@ -33,6 +33,8 @@ public class GamePlay : MonoBehaviour
 
     public GameplayState State { get; private set; }
 
+    public GridController grid;
+
     void Start()
     {
         StrandedPlayer = CreateStrandedPlayer();
