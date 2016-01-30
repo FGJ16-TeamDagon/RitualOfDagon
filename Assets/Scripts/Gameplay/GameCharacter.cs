@@ -48,7 +48,7 @@ public class GameCharacter : MonoBehaviour
             {
                 if (selection) selection.HandleSelected(false);
                 selection = value;
-                selection.HandleSelected(true);
+                if (selection) selection.HandleSelected(true);
             }
 
             if (oldSelection != newSelection && Selected != null)

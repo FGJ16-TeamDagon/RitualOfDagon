@@ -57,9 +57,10 @@ public class GamePlay : MonoBehaviour
         }
 
         ritual = new Ritual();
-        ritual.pattern = new Ritual.Point[2];
+        ritual.pattern = new Ritual.Point[3];
         ritual.pattern[0] = new Ritual.Point(0, 0);
         ritual.pattern[1] = new Ritual.Point(1, 0);
+        ritual.pattern[2] = new Ritual.Point(2, 0);
 
         StartGame();
     }
@@ -176,5 +177,6 @@ public class GamePlay : MonoBehaviour
         {
             CurrentPlayer = DeepOnesPlayer;
         }
+        GameCharacter.Selection = null;
     }
 }

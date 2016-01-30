@@ -44,15 +44,16 @@ public class Ritual
         int startZ = characters[startCharacter].Position.Z;
 
         Point offset = new Point(startX, startZ);
-        
-        for (int i = 0; i < characters.Count; i++)
+
+        for (int i = 0; i < pattern.Length; i++)
         {
-            for (int j = 0; j < pattern.Length; j ++)
+            for (int j = 0; j < characters.Count; j ++)
             {
-               if (characters[i].Position.X == startX + pattern[j].X &&
-                    characters[i].Position.Z == startZ + pattern[j].Z)
+               if (characters[j].Position.X == startX + pattern[i].X &&
+                    characters[j].Position.Z == startZ + pattern[i].Z)
                 {
                     fit++;
+                    
                     break;
                 }
             }
