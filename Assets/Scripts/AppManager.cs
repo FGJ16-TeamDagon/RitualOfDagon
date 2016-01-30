@@ -52,6 +52,11 @@ public class AppManager : MonoBehaviour
         System.GC.Collect();
     }
 
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.Escape))

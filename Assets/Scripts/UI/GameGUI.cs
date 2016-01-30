@@ -48,9 +48,18 @@ public class GameGUI : MonoBehaviour
         GamePlay.Instance.StartTurn();
     }
 
+    public void RestartLevel()
+    {
+       AppManager.Instance.RestartLevel();
+    }
+
+    public void ReturnToStartMenu()
+    {
+        AppManager.Instance.GoToStartMenu();
+    }
+
     public void OpenOptions()
     {
-        // TODO: open options view
         optionsPanel.SetActive(true);
         State = GUIState.Options;
     }
