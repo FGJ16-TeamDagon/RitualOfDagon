@@ -48,6 +48,8 @@ public class AppManager : MonoBehaviour
     public void StartLevel()
     {
         SceneManager.LoadScene("Level01");
+        Resources.UnloadUnusedAssets();
+        System.GC.Collect();
     }
 
     private void Update()
