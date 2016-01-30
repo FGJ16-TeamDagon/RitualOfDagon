@@ -106,7 +106,9 @@ public class GamePlay : MonoBehaviour
 
         MaxTurns = Mathf.FloorToInt(ritual.pattern.Length * 0.5f) + 3;
 
-        ShowPattern();
+        State = GameplayState.Ready;
+
+        ShowPattern();   
     }
 
     private Player CreateStrandedPlayer()
@@ -125,7 +127,7 @@ public class GamePlay : MonoBehaviour
 
     public void StartGame()
     {
-        if (State != GameplayState.Ready || State != GameplayState.ShowPattern)
+        if (State != GameplayState.Ready && State != GameplayState.ShowPattern)
         {
             return;
         }
