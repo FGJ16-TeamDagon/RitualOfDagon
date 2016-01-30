@@ -51,24 +51,16 @@ public class GameCharacter : MonoBehaviour
             var oldSelection = selection;
             var newSelection = value;
 
-            if (selection == value)
-            {
-                if (selection != null)
-                {
-                    selection.HandleSelected(false);
-                }
-                selection = null;
-            }
-            else
+            if (selection != value)
             {
                 if (selection) selection.HandleSelected(false);
                 selection = value;
                 if (selection) selection.HandleSelected(true);
-            }
 
-            if (oldSelection != newSelection && Selected != null)
-            {
-                Selected(new SelectionEvent(oldSelection, newSelection));
+                if (oldSelection != newSelection && Selected != null)
+                {
+                    Selected(new SelectionEvent(oldSelection, newSelection));
+                }
             }
         }
     }

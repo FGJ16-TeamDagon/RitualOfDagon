@@ -9,6 +9,7 @@ public class GamePlay : MonoBehaviour
     {
         Undefined = 0, // Game is not ready
         Ready = 1, // Game is ready to begin
+        ShowPattern = 2,
         Playing = 3,
         TurnEnd = 4,
         GameOver = 5
@@ -54,6 +55,16 @@ public class GamePlay : MonoBehaviour
 
     public Ritual ritual;
 
+    public int CurrentTurn { get; private set; }
+    public int MaxTurns { get; private set; }
+    public int TurnsLeft
+    {
+        get
+        {
+            return MaxTurns - CurrentTurn;
+        }
+    }
+
     [SerializeField]
     private RitualEffect ritualEffect;
 
@@ -93,7 +104,9 @@ public class GamePlay : MonoBehaviour
             }
         }
 
-        StartGame();
+        MaxTurns = Mathf.FloorToInt(ritual.pattern.Length * 0.5f) + 3;
+
+        ShowPattern();
     }
 
     private Player CreateStrandedPlayer()
@@ -110,8 +123,13 @@ public class GamePlay : MonoBehaviour
         return player;
     }
 
-    private void StartGame()
+    public void StartGame()
     {
+        if (State != GameplayState.Ready || State != GameplayState.ShowPattern)
+        {
+            return;
+        }
+
         CurrentPlayer = DeepOnesPlayer;
         State = GameplayState.Playing;
     }
@@ -212,6 +230,17 @@ public class GamePlay : MonoBehaviour
         {
             GameCharacter.Selection = StrandedPlayer.characters[0];
         }
+        else
+        {
+            CurrentTurn++;
+            
+            Debug.Log("Turn " + CurrentTurn + "/" + MaxTurns);
+
+            if (TurnsLeft <= 0)
+            {
+                StrandedVictory();
+            }
+        }
     }
 
     public void EndTurn()
@@ -240,6 +269,11 @@ public class GamePlay : MonoBehaviour
         ritualEffect.StartEffect(ritual);
     }
 
+    private void StrandedVictory()
+    {
+        State = GameplayState.GameOver;
+    }
+
     public static IEnumerable<T> RandomPermutation<T>(IEnumerable<T> sequence)
     {
         T[] retArray = sequence.ToArray();
@@ -257,5 +291,10 @@ public class GamePlay : MonoBehaviour
         }
 
         return retArray;
+    }
+
+    public void ShowPattern()
+    {
+        State = GameplayState.ShowPattern;
     }
 }
