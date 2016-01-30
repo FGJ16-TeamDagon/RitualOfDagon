@@ -43,6 +43,13 @@ public class Ritual
         int startX = characters[startCharacter].Position.X;
         int startZ = characters[startCharacter].Position.Z;
 
+        string str = "Ritual positions: ";
+        for (int i = 0; i < pattern.Length; i++)
+        {
+            str += " " + (startX + pattern[i].X) + ":" + (startZ + pattern[i].Z);
+        }
+        //Debug.Log(str);
+
         Point offset = new Point(startX, startZ);
 
         for (int i = 0; i < pattern.Length; i++)

@@ -1,7 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
-public class RitualFactory : MonoBehaviour 
+public class RitualFactory 
 {
     public Ritual GetRandomRitual()
     {
@@ -12,10 +12,10 @@ public class RitualFactory : MonoBehaviour
         {
             case 0:
                 pattern = new Ritual.Point[4];
-                pattern[0] = new Ritual.Point(0, 1);
-                pattern[1] = new Ritual.Point(1, 0);
-                pattern[2] = new Ritual.Point(1, 2);
-                pattern[3] = new Ritual.Point(2, 1);
+                pattern[0] = new Ritual.Point(0, 0);
+                pattern[1] = new Ritual.Point(1, -1);
+                pattern[2] = new Ritual.Point(1, 1);
+                pattern[3] = new Ritual.Point(2, 0);
                 textureId = "shape2";
                 break;
             case 1:
@@ -28,17 +28,17 @@ public class RitualFactory : MonoBehaviour
                 break;
             case 2:
                 pattern = new Ritual.Point[3];
-                pattern[0] = new Ritual.Point(0, 1);
-                pattern[1] = new Ritual.Point(1, 0);
-                pattern[2] = new Ritual.Point(2, 1);
+                pattern[0] = new Ritual.Point(0, 0);
+                pattern[1] = new Ritual.Point(1, -1);
+                pattern[2] = new Ritual.Point(2, 0);
                 textureId = "shape4";
                 break;
             case 3:
                 pattern = new Ritual.Point[4];
-                pattern[0] = new Ritual.Point(0, 3);
-                pattern[1] = new Ritual.Point(1, 2);
-                pattern[2] = new Ritual.Point(2, 1);
-                pattern[2] = new Ritual.Point(3, 0);
+                pattern[0] = new Ritual.Point(0, 0);
+                pattern[1] = new Ritual.Point(1, -1);
+                pattern[2] = new Ritual.Point(2, -2);
+                pattern[3] = new Ritual.Point(3, -3);
                 textureId = "shape5";
                 break;
             case 4:
@@ -46,18 +46,18 @@ public class RitualFactory : MonoBehaviour
                 pattern[0] = new Ritual.Point(0, 0);
                 pattern[1] = new Ritual.Point(0, 1);
                 pattern[2] = new Ritual.Point(0, 2);
-                pattern[2] = new Ritual.Point(1, 0);
-                pattern[2] = new Ritual.Point(2, 0);
+                pattern[3] = new Ritual.Point(1, 0);
+                pattern[4] = new Ritual.Point(2, 0);
                 textureId = "shape6";
                 break;
             case 5:
                 pattern = new Ritual.Point[6];
-                pattern[0] = new Ritual.Point(0, 1);
-                pattern[1] = new Ritual.Point(1, 1);
-                pattern[2] = new Ritual.Point(1, 2);
-                pattern[2] = new Ritual.Point(2, 0);
-                pattern[2] = new Ritual.Point(2, 2);
-                pattern[2] = new Ritual.Point(3, 1);
+                pattern[0] = new Ritual.Point(0, 0);
+                pattern[1] = new Ritual.Point(1, 0);
+                pattern[2] = new Ritual.Point(1, 1);
+                pattern[3] = new Ritual.Point(2, -1);
+                pattern[4] = new Ritual.Point(2, 1);
+                pattern[5] = new Ritual.Point(3, 0);
                 textureId = "shape7";
                 break;
             case 6:
@@ -65,9 +65,9 @@ public class RitualFactory : MonoBehaviour
                 pattern[0] = new Ritual.Point(0, 0);
                 pattern[1] = new Ritual.Point(1, 0);
                 pattern[2] = new Ritual.Point(1, 1);
-                pattern[2] = new Ritual.Point(1, 2);
-                pattern[2] = new Ritual.Point(1, 3);
-                pattern[2] = new Ritual.Point(2, 0);
+                pattern[3] = new Ritual.Point(1, 2);
+                pattern[4] = new Ritual.Point(1, 3);
+                pattern[5] = new Ritual.Point(2, 0);
                 textureId = "shape8";
                 break;
             default:
