@@ -51,11 +51,10 @@ public class GamePlay : MonoBehaviour
         StrandedPlayer = CreateStrandedPlayer();
         DeepOnesPlayer = CreateDeepOnesPlayer();
 
-        ritual = new Ritual();
-        ritual.pattern = new Ritual.Point[3];
-        ritual.pattern[0] = new Ritual.Point(0, 0);
-        ritual.pattern[1] = new Ritual.Point(1, 0);
-        ritual.pattern[2] = new Ritual.Point(2, 0);
+        var ritualFactory = new RitualFactory();
+
+        ritual = ritualFactory.GetRandomRitual();
+        Debug.Log(ritual.image.name);
 
         var characters = RandomPermutation(FindObjectsOfType<GameCharacter>());
 

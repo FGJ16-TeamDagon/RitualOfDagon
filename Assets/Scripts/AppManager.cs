@@ -11,7 +11,8 @@ public class AppManager : MonoBehaviour
         {
             if (instance == null)
             {
-                var go = Resources.Load<GameObject>("AppManager");
+                var prefab = Resources.Load<GameObject>("AppManager");
+                var go = Instantiate(prefab);
                 instance = go.GetComponent<AppManager>();
             }
 
@@ -19,8 +20,9 @@ public class AppManager : MonoBehaviour
         }
     }
 
-    void Awake()
+    void OnEnable()
     {
+        Debug.Log("AppManage OnEnable");
         if (instance == null)
         {
             instance = this;
@@ -33,6 +35,11 @@ public class AppManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    void OnDisable()
+    {
+        Debug.Log("AppManage OnDisable");
+    }
+
     public void GoToStartMenu()
     {
         SceneManager.LoadScene("StartMenu");
@@ -41,6 +48,8 @@ public class AppManager : MonoBehaviour
     public void StartLevel()
     {
         SceneManager.LoadScene("Level01");
+        Resources.UnloadUnusedAssets();
+        System.GC.Collect();
     }
 
     private void Update()
