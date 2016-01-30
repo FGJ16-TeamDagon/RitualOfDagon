@@ -7,20 +7,30 @@ public class GridController : MonoBehaviour
     [SerializeField]
     private GameObject linePrefab;
 
+    [SerializeField]
+    private GameObject gridCellPrefab;
+
     public int sizeX = 8;
     public int sizeZ = 8;
 
     private List<LineRenderer> lines;
 
-    public List<GridPosition> points = new List<GridPosition>();
+    private Transform linesParent;
+    private Transform cellsParent;
+
+    public GridPosition[,] points;
 
     void Start()
     {
         CreateLines();
+        CreateCells();
     }
 
     void CreateLines()
     {
+        linesParent = new GameObject("Lines parent").transform;
+        linesParent.SetParent(transform, false);
+
         lines = new List<LineRenderer>();
 
         for (int x = 0; x < sizeX + 1; x++)
@@ -36,10 +46,30 @@ public class GridController : MonoBehaviour
         }
     }
 
+    private void CreateCells()
+    {
+        points = new GridPosition[sizeX, sizeZ];
+
+        cellsParent = new GameObject("Cells parent").transform;
+        cellsParent.SetParent(transform, false);
+
+        for (int x = 0; x < sizeX; x++)
+        {
+            for (int z = 0; z < sizeZ; z++)
+            {
+                var go = Instantiate<GameObject>(gridCellPrefab);
+                var cell = go.GetComponent<GridPosition>();
+                cell.SetGridPosition(x, z);
+                go.transform.SetParent(cellsParent, true);
+                points[x, z] = cell;
+            }
+        }
+    }
+
     private LineRenderer CreateHorizontalLineRenderer(float zPos)
     {
         var go = Instantiate<GameObject>(linePrefab);
-        go.transform.parent = transform;
+        go.transform.SetParent(linesParent, true);
         go.transform.localPosition = Vector3.forward * zPos;
         go.transform.localRotation = Quaternion.identity;
         var line = go.GetComponent<LineRenderer>();
@@ -51,6 +81,7 @@ public class GridController : MonoBehaviour
     private LineRenderer CreateVerticalLineRenderer(float xPos)
     {
         var go = Instantiate<GameObject>(linePrefab);
+        go.transform.SetParent(linesParent, true);
         go.transform.parent = transform;
         go.transform.localPosition = Vector3.right * xPos;
         go.transform.localRotation = Quaternion.identity;
@@ -60,19 +91,30 @@ public class GridController : MonoBehaviour
         return line;
     }
 
-    public void AddPoint(GridPosition point)
+    public List<GridPosition> FindPath(GridPosition origin, GridPosition goal)
     {
-        if (!points.Contains(point))
-        {
-            points.Add(point);
-        }
+        AStar pathFinder = new AStar();
+        pathFinder.FindPath(origin, goal, points, true);
+        return pathFinder.CellsFromPath();
     }
 
-    public void RemovePoint(GridPosition point)
+    public GridPosition PositionToCell(Vector3 position)
     {
-        if (points.Contains(point))
+        GridPosition pos = null;
+
+        for (int x = 0; x < points.Length; x++)
         {
-            points.Remove(point);
+            for (int z = 0; z < points.GetLongLength(1); z++)
+            {
+                if (points[x,z].ContainsPoint(position))
+                {
+                    pos = points[x, z];
+                    break;
+                }   
+            }
+            if (pos != null) break;
         }
+
+        return pos;
     }
 }
