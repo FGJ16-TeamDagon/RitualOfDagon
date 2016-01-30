@@ -125,7 +125,6 @@ public class GridController : MonoBehaviour
         {
             for (int z = 0; z < points.GetLength(1); z++)
             {
-                var col = points[x, z].GetComponent<Collider>();
                 RaycastHit hit;
                 Ray ray = new Ray(points[x, z].transform.position + Vector3.up, -Vector3.up);
                 if (Physics.Raycast(ray, out hit, 10))

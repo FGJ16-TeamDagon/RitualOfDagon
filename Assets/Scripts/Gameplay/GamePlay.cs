@@ -35,6 +35,8 @@ public class GamePlay : MonoBehaviour
 
     public GridController grid;
 
+    public Ritual ritual;
+
     void Start()
     {
         StrandedPlayer = CreateStrandedPlayer();
@@ -54,14 +56,17 @@ public class GamePlay : MonoBehaviour
             }
         }
 
+        ritual = new Ritual();
+        ritual.pattern = new Ritual.Point[2];
+        ritual.pattern[0] = new Ritual.Point(0, 0);
+        ritual.pattern[1] = new Ritual.Point(1, 0);
+
         StartGame();
     }
 
     private Player CreateStrandedPlayer()
     {
         var player = new Player("Stranded");
-
-        
 
         return player;
     }
@@ -87,7 +92,11 @@ public class GamePlay : MonoBehaviour
     {
         if (State == GameplayState.Playing)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetKeyUp(KeyCode.Return))
+            {
+                EndTurn();
+            }
+            else if (Input.GetMouseButtonDown(0))
             {
                 RaycastHit hit;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -138,7 +147,7 @@ public class GamePlay : MonoBehaviour
     void HandleTouch(GameObject target)
     {
         var character = target.GetComponent<GameCharacter>();
-        if (character != null)
+        if (character != null && CurrentPlayer != null && CurrentPlayer.characters.Contains(character))
         {
             GameCharacter.Selection = character;
         }
@@ -154,5 +163,18 @@ public class GamePlay : MonoBehaviour
             }
         }
         
+    }
+
+    public void EndTurn()
+    {
+        if (CurrentPlayer == DeepOnesPlayer)
+        {
+            CurrentPlayer = StrandedPlayer;
+            Debug.Log("Ritual fit: " + ritual.BestFit(DeepOnesPlayer.characters) + "/" + ritual.pattern.Length);
+        }
+        else
+        {
+            CurrentPlayer = DeepOnesPlayer;
+        }
     }
 }
