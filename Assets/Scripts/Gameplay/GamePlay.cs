@@ -14,6 +14,8 @@ public class GamePlay : MonoBehaviour
         GameOver = 5
     }
 
+    public static event System.Action GamestateChanged;
+
     private static GamePlay instance;
     public static GamePlay Instance
     {
@@ -32,11 +34,35 @@ public class GamePlay : MonoBehaviour
     public Player DeepOnesPlayer { get; private set; }
     public Player CurrentPlayer;
 
-    public GameplayState State { get; private set; }
-
+    private GameplayState state;
+    public GameplayState State
+    {
+        get
+        {
+            return state;
+        }
+        private set
+        {
+            if (value != state)
+            {
+                state = value;
+                if (GamestateChanged != null) GamestateChanged();
+            }
+        }
+    }
     public GridController grid;
 
     public Ritual ritual;
+
+    public int CurrentTurn { get; private set; }
+    public int MaxTurns { get; private set; }
+    public int TurnsLeft
+    {
+        get
+        {
+            return MaxTurns - CurrentTurn;
+        }
+    }
 
     [SerializeField]
     private RitualEffect ritualEffect;
@@ -76,6 +102,8 @@ public class GamePlay : MonoBehaviour
                 }
             }
         }
+
+        MaxTurns = Mathf.FloorToInt(ritual.pattern.Length * 0.5f) + 3;
 
         StartGame();
     }
@@ -196,6 +224,17 @@ public class GamePlay : MonoBehaviour
         {
             GameCharacter.Selection = StrandedPlayer.characters[0];
         }
+        else
+        {
+            CurrentTurn++;
+            
+            Debug.Log("Turn " + CurrentTurn + "/" + MaxTurns);
+
+            if (TurnsLeft <= 0)
+            {
+                StrandedVictory();
+            }
+        }
     }
 
     public void EndTurn()
@@ -222,6 +261,11 @@ public class GamePlay : MonoBehaviour
     {
         State = GameplayState.GameOver;
         ritualEffect.StartEffect(ritual);
+    }
+
+    private void StrandedVictory()
+    {
+        State = GameplayState.GameOver;
     }
 
     public static IEnumerable<T> RandomPermutation<T>(IEnumerable<T> sequence)

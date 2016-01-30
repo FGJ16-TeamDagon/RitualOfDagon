@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameGUI : MonoBehaviour 
 {
@@ -11,6 +12,9 @@ public class GameGUI : MonoBehaviour
         GameGUI,
         Options,
     }
+
+    [SerializeField]
+    private UnityEngine.UI.Text turnsLeftDisplay;
 
     private static GameGUI instance;
     public static GameGUI Instance
@@ -55,5 +59,20 @@ public class GameGUI : MonoBehaviour
     {
         // TODO: if hidden/options, transition to game GUI
         State = GUIState.GameGUI;
+    }
+
+    void Update()
+    {
+        if (GamePlay.Instance.State == GamePlay.GameplayState.Playing)
+        {
+            if (GamePlay.Instance.CurrentPlayer == GamePlay.Instance.StrandedPlayer)
+            {
+                turnsLeftDisplay.text = "Block the ritual";
+            }
+            else
+            {
+                turnsLeftDisplay.text = GamePlay.Instance.TurnsLeft + " turns to complete ritual";
+            }
+        }
     }
 }
