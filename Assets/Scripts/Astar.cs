@@ -71,7 +71,6 @@ public class AStar
             if (NodeIsGoal(currentNode))
             {
                 keepSearching = false;
-                Debug.Log("NodeIsGoal " + currentNode.cell.X + " " + currentNode.cell.Z);
             }
             else
             {

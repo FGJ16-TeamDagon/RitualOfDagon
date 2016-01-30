@@ -48,7 +48,7 @@ public class GameCharacter : MonoBehaviour
             {
                 if (selection) selection.HandleSelected(false);
                 selection = value;
-                selection.HandleSelected(true);
+                if (selection) selection.HandleSelected(true);
             }
 
             if (oldSelection != newSelection && Selected != null)
@@ -58,7 +58,22 @@ public class GameCharacter : MonoBehaviour
         }
     }
 
-    public GridPosition position;
+    private GridPosition position;
+    public GridPosition Position
+    {
+        get
+        {
+            if (position == null)
+            {
+                position = GamePlay.Instance.grid.PositionToCell(transform.position);
+            }
+            return position;
+        }
+        private set
+        {
+            position = value;
+        }
+    }
 
     [SerializeField]
     private GameObject selectionIndicator;
@@ -79,19 +94,16 @@ public class GameCharacter : MonoBehaviour
         var lookPos = target.GetWorldPos();
         lookPos.y = transform.position.y;
         transform.LookAt(lookPos);
+        
+        path = GamePlay.Instance.grid.FindPath(Position, target);
 
-        if (position == null) position = GamePlay.Instance.grid.PositionToCell(transform.position);
-
-        path = GamePlay.Instance.grid.FindPath(position, target);
-
-        Debug.Log(position.X + " " + position.Z + " " + path.Count + " " + target.X + " " + target.Z);
         if (path.Count > 0)
         {
             tween = LeanTween.move(gameObject, path[0].GetWorldPos(), moveTime);
             tween.setEase(LeanTweenType.easeInOutQuad);
-            position.occupant = null;
-            position = path[0];
-            position.occupant = gameObject;
+            Position.occupant = null;
+            Position = path[0];
+            Position.occupant = gameObject;
             pathIndex = 0;
             tween.onComplete = () =>
             {
@@ -113,10 +125,9 @@ public class GameCharacter : MonoBehaviour
 
             tween = LeanTween.move(gameObject, path[pathIndex].GetWorldPos(), moveTime);
             tween.setEase(LeanTweenType.easeInOutQuad);
-            position.occupant = null;
-            position = path[pathIndex];
-            position.occupant = gameObject;
-            Debug.Log(position.X + " " + position.Z);
+            Position.occupant = null;
+            Position = path[pathIndex];
+            Position.occupant = gameObject;
             var lookPos = path[pathIndex].GetWorldPos();
             lookPos.y = transform.position.y;
             transform.LookAt(lookPos);
