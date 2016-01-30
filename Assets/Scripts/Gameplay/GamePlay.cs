@@ -9,6 +9,7 @@ public class GamePlay : MonoBehaviour
     {
         Undefined = 0, // Game is not ready
         Ready = 1, // Game is ready to begin
+        ShowPattern = 2,
         Playing = 3,
         TurnEnd = 4,
         GameOver = 5
@@ -105,7 +106,7 @@ public class GamePlay : MonoBehaviour
 
         MaxTurns = Mathf.FloorToInt(ritual.pattern.Length * 0.5f) + 3;
 
-        StartGame();
+        ShowPattern();
     }
 
     private Player CreateStrandedPlayer()
@@ -122,8 +123,13 @@ public class GamePlay : MonoBehaviour
         return player;
     }
 
-    private void StartGame()
+    public void StartGame()
     {
+        if (State != GameplayState.Ready || State != GameplayState.ShowPattern)
+        {
+            return;
+        }
+
         CurrentPlayer = DeepOnesPlayer;
         State = GameplayState.Playing;
     }
@@ -285,5 +291,10 @@ public class GamePlay : MonoBehaviour
         }
 
         return retArray;
+    }
+
+    public void ShowPattern()
+    {
+        State = GameplayState.ShowPattern;
     }
 }

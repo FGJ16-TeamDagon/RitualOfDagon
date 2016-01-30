@@ -32,6 +32,11 @@ public class GameGUI : MonoBehaviour
 
     public GUIState State { get; private set; }
 
+    void Start()
+    {
+        StartGame(); // TODO: show pattern at start, then call this
+    }
+
     public void EndTurn()
     {
         GamePlay.Instance.EndTurn();
@@ -74,5 +79,10 @@ public class GameGUI : MonoBehaviour
                 turnsLeftDisplay.text = GamePlay.Instance.TurnsLeft + " turns to complete ritual";
             }
         }
+    }
+
+    public void StartGame()
+    {
+        GamePlay.Instance.StartGame();
     }
 }
