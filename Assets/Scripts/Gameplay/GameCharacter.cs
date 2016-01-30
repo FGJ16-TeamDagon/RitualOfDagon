@@ -18,6 +18,12 @@ public class GameCharacter : MonoBehaviour
 
     public static event System.Action<SelectionEvent> Selected;
 
+    LTDescr tween;
+    List<GridPosition> path;
+    int pathIndex;
+    [SerializeField]
+    private float moveTime = 0.5f;
+
     private static GameCharacter selection;
     public static GameCharacter Selection
     {
@@ -67,19 +73,53 @@ public class GameCharacter : MonoBehaviour
 
     public void MoveTowards(GridPosition target)
     {
+        if (tween != null) LeanTween.cancel(tween.id);
+
         var lookPos = target.GetWorldPos();
         lookPos.y = transform.position.y;
         transform.LookAt(lookPos);
 
         if (position == null) position = GamePlay.Instance.grid.PositionToCell(transform.position);
 
-        var path = GamePlay.Instance.grid.FindPath(position, target);
+        path = GamePlay.Instance.grid.FindPath(position, target);
 
         Debug.Log(position.X + " " + position.Z + " " + path.Count + " " + target.X + " " + target.Z);
-
-        for (int i = 0; i < path.Count; i++)
+        if (path.Count > 0)
         {
-            Debug.Log(path[i].X + ":" + path[i].Z);
+            for (int i = 0; i < path.Count; i++)
+            {
+                Debug.Log(path[i].X + ":" + path[i].Z);
+            }
+            tween = LeanTween.move(gameObject, path[0].GetWorldPos(), moveTime);
+            position = path[0];
+            pathIndex = 0;
+            tween.onComplete = () =>
+            {
+                OnCompletePathStep();
+            } ;
+        }
+    }
+
+    void OnCompletePathStep()
+    {
+        pathIndex++;
+        Debug.Log("OnCompletePathStep " + pathIndex + "/" + path.Count);
+        if (pathIndex < path.Count)
+        {
+            if (tween != null) LeanTween.cancel(tween.id);
+
+            tween = LeanTween.move(gameObject, path[pathIndex].GetWorldPos(), moveTime);
+            position = path[pathIndex];
+            Debug.Log(position.X + " " + position.Z);
+            var lookPos = path[pathIndex].GetWorldPos();
+            lookPos.y = transform.position.y;
+            transform.LookAt(lookPos);
+
+            tween.onComplete = OnCompletePathStep;
+        }
+        else
+        {
+            path = null;
         }
     }
 }
