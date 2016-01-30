@@ -9,7 +9,6 @@ public class GamePlay : MonoBehaviour
     {
         Undefined = 0, // Game is not ready
         Ready = 1, // Game is ready to begin
-        TurnStart = 2,
         Playing = 3,
         TurnEnd = 4,
         GameOver = 5
@@ -38,6 +37,14 @@ public class GamePlay : MonoBehaviour
     public GridController grid;
 
     public Ritual ritual;
+
+    [SerializeField]
+    private RitualEffect ritualEffect;
+
+    void Awake()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("UI", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+    }
 
     void Start()
     {
@@ -156,6 +163,8 @@ public class GamePlay : MonoBehaviour
 
     void HandleTouch(GameObject target)
     {
+        if (State != GameplayState.Playing) return;
+
         var character = target.GetComponent<GameCharacter>();
         if (character != null && CurrentPlayer != null && CurrentPlayer.characters.Contains(character))
         {
@@ -175,18 +184,45 @@ public class GamePlay : MonoBehaviour
         
     }
 
+    public void StartTurn()
+    {
+        StartCoroutine(StartTurn_Coroutine());
+    }
+
+    IEnumerator StartTurn_Coroutine()
+    {
+        yield return null;
+        State = GameplayState.Playing;
+        if (CurrentPlayer == StrandedPlayer)
+        {
+            GameCharacter.Selection = StrandedPlayer.characters[0];
+        }
+    }
+
     public void EndTurn()
     {
         if (CurrentPlayer == DeepOnesPlayer)
         {
             CurrentPlayer = StrandedPlayer;
-            Debug.Log("Ritual fit: " + ritual.BestFit(DeepOnesPlayer.characters) + "/" + ritual.pattern.Length);
+            var bestFit = ritual.BestFit(DeepOnesPlayer.characters);
+            Debug.Log("Ritual fit: " + bestFit + "/" + ritual.pattern.Length);
+            if (bestFit >= ritual.pattern.Length)
+            {
+                DeepOneVictory();
+            }
         }
         else
         {
             CurrentPlayer = DeepOnesPlayer;
         }
         GameCharacter.Selection = null;
+        State = GameplayState.TurnEnd;
+    }
+
+    private void DeepOneVictory()
+    {
+        State = GameplayState.GameOver;
+        ritualEffect.StartEffect(ritual);
     }
 
     public static IEnumerable<T> RandomPermutation<T>(IEnumerable<T> sequence)
