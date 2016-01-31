@@ -3,14 +3,13 @@ using System.Collections;
 
 public class GameCameraController : MonoBehaviour 
 {
-    [SerializeField]
-    private float speed;
+    private float speed = 4;
 
     [SerializeField]
     private Transform mover;
-    [SerializeField]
+    
     private float damping = 2;
-    [SerializeField]
+    
     private float targetHeight = 7;
 
     private float maxMovement = 7;
