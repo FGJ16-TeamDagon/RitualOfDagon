@@ -23,7 +23,8 @@ public class SoundManager : MonoBehaviour
         Undefined = 0,
         DeepOneWalk = 1,
         TurnChange = 2,
-        StrandedWalk = 3
+        StrandedWalk = 3,
+        DeepOneVictoryWarning = 4,
     }
 
     [SerializeField]
@@ -32,6 +33,8 @@ public class SoundManager : MonoBehaviour
     private AudioClip strandedWalk;
     [SerializeField]
     private AudioClip turnChange;
+    [SerializeField]
+    private AudioClip deepOneVictoryWarning;
 
     private AudioSource audioPlayer;
 
@@ -45,6 +48,8 @@ public class SoundManager : MonoBehaviour
                 return strandedWalk;
             case SoundEffect.TurnChange:
                 return turnChange;
+            case SoundEffect.DeepOneVictoryWarning:
+                return deepOneVictoryWarning;
         }
 
         if (effect != SoundEffect.Undefined)

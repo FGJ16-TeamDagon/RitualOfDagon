@@ -268,6 +268,10 @@ public class GamePlay : MonoBehaviour
             {
                 DeepOneVictory();
             }
+            else if (bestFit == Ritual.pattern.Length - 1)
+            {
+                SoundManager.Instance.PlaySound(SoundManager.SoundEffect.DeepOneVictoryWarning);
+            }
         }
         else
         {
