@@ -6,6 +6,8 @@ public class GameGUI : MonoBehaviour
 {
     public GameObject optionsPanel;
     public Image patternImage;
+    public GameObject strandedCanvas;
+    public GameObject deepOneCanvas;
 
     public enum GUIState
     {
@@ -95,5 +97,15 @@ public class GameGUI : MonoBehaviour
     {
         GamePlay.Instance.StartGame();
         patternImage.sprite = Sprite.Create(GamePlay.Instance.Ritual.image, new Rect(0,0, GamePlay.Instance.Ritual.image.width, GamePlay.Instance.Ritual.image.height),new Vector2(0.5f,0.5f));
+    }
+
+    public void StrandedEnd()
+    {
+        strandedCanvas.SetActive(true);
+    }
+
+    public void DeepOneEnd()
+    {
+        deepOneCanvas.SetActive(true);
     }
 }

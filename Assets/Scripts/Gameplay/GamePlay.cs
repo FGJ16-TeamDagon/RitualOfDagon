@@ -275,11 +275,13 @@ public class GamePlay : MonoBehaviour
     {
         State = GameplayState.GameOver;
         ritualEffect.StartEffect(Ritual);
+        GameGUI.Instance.DeepOneEnd();
     }
 
     private void StrandedVictory()
     {
         State = GameplayState.GameOver;
+        GameGUI.Instance.StrandedEnd();
     }
 
     public static IEnumerable<T> RandomPermutation<T>(IEnumerable<T> sequence)
