@@ -1,7 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: fe9e72a0b01fe40aa90d43373fca4954
 timeCreated: 1454241461
 licenseType: Free
+=======
+guid: 41c877689019d5243841420d5f0a3091
+timeCreated: 1454241460
+licenseType: Pro
+>>>>>>> 5e3b226801ffba9a6834c2f79fbde6e1ab6433f7
 TextureImporter:
   fileIDToRecycleName: {}
   serializedVersion: 2
@@ -30,7 +36,11 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     filterMode: -1
+<<<<<<< HEAD
     aniso: -1
+=======
+    aniso: 16
+>>>>>>> 5e3b226801ffba9a6834c2f79fbde6e1ab6433f7
     mipBias: -1
     wrapMode: 1
   nPOTScale: 0
@@ -44,14 +54,22 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+<<<<<<< HEAD
   spritePixelsToUnits: 100
+=======
+  spritePixelsToUnits: 200
+>>>>>>> 5e3b226801ffba9a6834c2f79fbde6e1ab6433f7
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
     sprites: []
     outline: []
+<<<<<<< HEAD
   spritePackingTag: 
+=======
+  spritePackingTag: LevelObjects
+>>>>>>> 5e3b226801ffba9a6834c2f79fbde6e1ab6433f7
   userData: 
   assetBundleName: 
   assetBundleVariant: 
