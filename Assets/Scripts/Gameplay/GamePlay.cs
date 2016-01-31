@@ -71,6 +71,7 @@ public class GamePlay : MonoBehaviour
     void Awake()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("UI", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+        LeanTween.init();
     }
 
     void Start()
