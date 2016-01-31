@@ -107,6 +107,8 @@ public class GameCharacter : MonoBehaviour
     private GameObject selectionIndicator;
     [SerializeField]
     private GameObject selectionIndicatorBG;
+    [SerializeField]
+    private ParticleSystem moveParticles;
 
     public void HandleSelected(bool selected)
     {
@@ -156,6 +158,7 @@ public class GameCharacter : MonoBehaviour
             {
                 OnCompletePathStep();
             } ;
+            if (moveParticles) moveParticles.Play();
         }
     }
 
@@ -209,6 +212,8 @@ public class GameCharacter : MonoBehaviour
             SetUsedMovementPoint(usedMovementPoints + 1);
 
             tween.onComplete = OnCompletePathStep;
+
+            if (moveParticles) moveParticles.Play();
         }
         else
         {
