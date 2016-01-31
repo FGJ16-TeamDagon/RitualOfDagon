@@ -232,6 +232,9 @@ public class GamePlay : MonoBehaviour
     IEnumerator StartTurn_Coroutine()
     {
         yield return null;
+
+        SoundManager.Instance.PlaySound(SoundManager.SoundEffect.TurnChange);
+
         State = GameplayState.Playing;
         if (CurrentPlayer == StrandedPlayer)
         {
