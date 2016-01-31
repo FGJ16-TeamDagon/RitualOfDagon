@@ -9,7 +9,7 @@ public class CameraLightController : MonoBehaviour
     [SerializeField]
     private float height;
 
-    private float lightRange = 5;
+    private float lightRange = 7;
     private float lightIntensity = 4;
     private float ambientIntensity = 0.05f;
     private Color ambientColor = Color.white;
