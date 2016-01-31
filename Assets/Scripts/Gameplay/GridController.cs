@@ -20,11 +20,56 @@ public class GridController : MonoBehaviour
 
     public GridPosition[,] points;
 
+    private Color gridColor;
+    private Color gridTargetColor;
+    private Color gridColorTweenStartColor;
+    private LTDescr colorTween;
+    private float linesAlpha = 0.3f;
+
     void Start()
     {
         CreateLines();
         CreateCells();
         OccupyCells();
+    }
+
+    void OnEnable()
+    {
+        GamePlay.GamestateChanged += GamePlay_GamestateChanged;
+    }
+
+    void OnDisable()
+    {
+        GamePlay.GamestateChanged -= GamePlay_GamestateChanged;
+    }
+
+    private void GamePlay_GamestateChanged()
+    {
+        if (GamePlay.Instance.State == GamePlay.GameplayState.Playing)
+        {
+            gridColorTweenStartColor = gridColor;
+
+            if (GamePlay.Instance.CurrentPlayer == GamePlay.Instance.DeepOnesPlayer)
+            {
+                gridTargetColor = Player.DeepOneColorDark;
+            }
+            else
+            {
+                gridTargetColor = Player.StrandedColorDark;
+            }
+            gridTargetColor.a = linesAlpha;
+
+            if (colorTween != null) LeanTween.cancel(colorTween.id);
+
+            colorTween = LeanTween.value(gameObject, (c) => {
+                gridColor = c;
+               
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    lines[i].SetColors(gridColor, gridColor);
+                }
+            }, gridColorTweenStartColor, gridTargetColor, 1f);
+        }
     }
 
     void CreateLines()
