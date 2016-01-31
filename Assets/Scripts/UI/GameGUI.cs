@@ -8,6 +8,7 @@ public class GameGUI : MonoBehaviour
     public Image patternImage;
     public GameObject strandedCanvas;
     public GameObject deepOneCanvas;
+    public GameObject uiCanvas;
 
     public enum GUIState
     {
@@ -102,10 +103,12 @@ public class GameGUI : MonoBehaviour
     public void StrandedEnd()
     {
         strandedCanvas.SetActive(true);
+        uiCanvas.SetActive(false);
     }
 
     public void DeepOneEnd()
     {
         deepOneCanvas.SetActive(true);
+        uiCanvas.SetActive(false);
     }
 }
