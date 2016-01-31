@@ -20,13 +20,16 @@ public class SoundManager : MonoBehaviour
 
     public enum SoundEffect
     {
-        Undefined,
-        DeepOneWalk,
-        TurnChange,
+        Undefined = 0,
+        DeepOneWalk = 1,
+        TurnChange = 2,
+        StrandedWalk = 3
     }
 
     [SerializeField]
     private AudioClip deepOneWalk;
+    [SerializeField]
+    private AudioClip strandedWalk;
     [SerializeField]
     private AudioClip turnChange;
 
@@ -38,6 +41,8 @@ public class SoundManager : MonoBehaviour
         {
             case SoundEffect.DeepOneWalk:
                 return deepOneWalk;
+            case SoundEffect.StrandedWalk:
+                return strandedWalk;
             case SoundEffect.TurnChange:
                 return turnChange;
         }
