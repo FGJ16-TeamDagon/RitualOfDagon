@@ -57,6 +57,8 @@ public class GamePlay : MonoBehaviour
 
     public Ritual Ritual { get; private set; }
 
+    public Player Winner { get; private set; }
+
     public int CurrentTurn { get; private set; }
     public int MaxTurns { get; private set; }
     public int TurnsLeft
@@ -66,9 +68,6 @@ public class GamePlay : MonoBehaviour
             return MaxTurns - CurrentTurn;
         }
     }
-
-    [SerializeField]
-    private RitualEffect ritualEffect;
 
     void Awake()
     {
@@ -226,7 +225,10 @@ public class GamePlay : MonoBehaviour
 
     public void StartTurn()
     {
-        StartCoroutine(StartTurn_Coroutine());
+        if (State != GameplayState.GameOver)
+        {
+            StartCoroutine(StartTurn_Coroutine());
+        }
     }
 
     IEnumerator StartTurn_Coroutine()
@@ -245,12 +247,8 @@ public class GamePlay : MonoBehaviour
             CurrentTurn++;
             
             Debug.Log("Turn " + CurrentTurn + "/" + MaxTurns);
-
-            if (TurnsLeft <= 0)
-            {
-                StrandedVictory();
-            }
-            else
+            
+            if (TurnsLeft > 0)
             {
                 GameCharacter.Selection = DeepOnesPlayer.characters[0];
             }
@@ -268,6 +266,10 @@ public class GamePlay : MonoBehaviour
             {
                 DeepOneVictory();
             }
+            else if (TurnsLeft <= 1)
+            {
+                StrandedVictory();
+            }
             else if (bestFit == Ritual.pattern.Length - 1)
             {
                 SoundManager.Instance.PlaySound(SoundManager.SoundEffect.DeepOneVictoryWarning);
@@ -278,20 +280,30 @@ public class GamePlay : MonoBehaviour
             CurrentPlayer = DeepOnesPlayer;
         }
         GameCharacter.Selection = null;
-        State = GameplayState.TurnEnd;
+        if (State != GameplayState.GameOver)
+        {
+            State = GameplayState.TurnEnd;
+        }
     }
-
+    
     private void DeepOneVictory()
     {
+        Winner = DeepOnesPlayer;
+        Debug.Log("DeepOneVictory");
         State = GameplayState.GameOver;
-        ritualEffect.StartEffect(Ritual);
+        var prefab = Resources.Load<GameObject>("RitualEffect");
+        Instantiate(prefab);
         GameGUI.Instance.DeepOneEnd();
         cameraController.Shake();
     }
 
     private void StrandedVictory()
     {
+        Winner = StrandedPlayer;
+        Debug.Log("StrandedVictory");
         State = GameplayState.GameOver;
+        var effectPrefab = Resources.Load<GameObject>("StrandedVictoryEffect");
+        Instantiate(effectPrefab);
         GameGUI.Instance.StrandedEnd();
     }
 

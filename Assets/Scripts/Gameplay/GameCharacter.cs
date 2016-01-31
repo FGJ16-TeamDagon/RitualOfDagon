@@ -123,11 +123,11 @@ public class GameCharacter : MonoBehaviour
 
         if (MovementLeft > 0 && selectionIndicatorBG)
         {
-            selectionIndicatorBG.SetActive(true);
+            if (selectionIndicatorBG) selectionIndicatorBG.SetActive(true);
         }
         else
         {
-            selectionIndicatorBG.SetActive(false);
+            if (selectionIndicatorBG) selectionIndicatorBG.SetActive(false);
         }
     }
 
