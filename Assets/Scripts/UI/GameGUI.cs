@@ -9,6 +9,9 @@ public class GameGUI : MonoBehaviour
     public GameObject strandedCanvas;
     public GameObject deepOneCanvas;
     public GameObject uiCanvas;
+    public Image soundBlock;
+    private Color muted = new Color(1.0f, 0.0f, 0.0f, 0.5f);
+    private Color sounded = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 
     public enum GUIState
     {
@@ -41,6 +44,15 @@ public class GameGUI : MonoBehaviour
         StartGame(); // TODO: show pattern at start, then call this
 
         AudioListener.volume = PlayerPrefs.GetFloat("AudioListener.volume", 1);
+
+        if (AudioListener.volume < 0.5f)
+        {
+            soundBlock.color = muted;
+        }
+        else
+        {
+            soundBlock.color = sounded;
+        }
     }
 
     public void EndTurn()
@@ -150,5 +162,14 @@ public class GameGUI : MonoBehaviour
         AudioListener.volume = AudioListener.volume > 0 ? 0 : 1;
 
         PlayerPrefs.SetFloat("AudioListener.volume", AudioListener.volume);
+
+        if (AudioListener.volume < 0.5f)
+        {
+            soundBlock.color = muted;
+        }
+        else
+        {
+            soundBlock.color = sounded;
+        }
     }
 }

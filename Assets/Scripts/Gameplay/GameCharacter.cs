@@ -181,6 +181,12 @@ public class GameCharacter : MonoBehaviour
                 movementPointsFill.fillAmount = Mathf.MoveTowards(movementPointsFill.fillAmount, targetFill, Time.deltaTime);
             }
         }
+
+        if (selectionIndicator && selectionIndicatorBG && Selection == this)
+        {
+            //selectionIndicator.transform.Rotate(Vector3.forward * Time.deltaTime * 10);
+            selectionIndicatorBG.transform.Rotate(Vector3.forward * Time.deltaTime * 10);
+        }
     }
 
     void OnCompletePathStep()
