@@ -5,7 +5,6 @@ public class GameCameraController : MonoBehaviour
 {
     private float speed = 4;
 
-    [SerializeField]
     private Transform mover;
     
     private float damping = 2;
@@ -17,6 +16,24 @@ public class GameCameraController : MonoBehaviour
     private Vector3 lastMousePos;
 
     private Vector3 momentum;
+
+    private Transform shakeRoot;
+
+    private float maxShakeAmount = 0.2f;
+    private float shakeAmount = 0;
+    private float shakeReduction = 0.25f;
+
+    void Start()
+    {
+        var rootGO = new GameObject("Game Camera Rig");
+        rootGO.transform.position = transform.position;
+        rootGO.transform.rotation = transform.rotation;
+
+        transform.SetParent(rootGO.transform);
+
+        shakeRoot = transform;
+        mover = rootGO.transform;
+    }
 
     void Update()
     {
@@ -49,6 +66,25 @@ public class GameCameraController : MonoBehaviour
 
         mover.position = moverPos;
 
+        shakeAmount = Mathf.MoveTowards(shakeAmount, 0, Time.deltaTime * shakeReduction);
+
+        if (shakeAmount > 0)
+        {
+            shakeRoot.localPosition = new Vector3(
+                Random.value * shakeAmount - shakeAmount * 0.5f,
+                0,
+                Random.value * shakeAmount - shakeAmount * 0.5f
+                );
+        }
+        else
+        {
+            shakeRoot.localPosition = Vector3.zero;
+        }
         lastMousePos = Input.mousePosition;
+    }
+
+    public void Shake()
+    {
+        shakeAmount = maxShakeAmount;
     }
 }

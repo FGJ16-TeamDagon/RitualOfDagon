@@ -17,6 +17,8 @@ public class GamePlay : MonoBehaviour
 
     public static event System.Action GamestateChanged;
 
+    private GameCameraController cameraController;
+
     private static GamePlay instance;
     public static GamePlay Instance
     {
@@ -70,6 +72,7 @@ public class GamePlay : MonoBehaviour
 
     void Awake()
     {
+        cameraController = Camera.main.GetComponent<GameCameraController>();
         UnityEngine.SceneManagement.SceneManager.LoadScene("UI", UnityEngine.SceneManagement.LoadSceneMode.Additive);
         LeanTween.init();
     }
@@ -338,7 +341,8 @@ public class GamePlay : MonoBehaviour
 
         if (current == null)
         {
-            // TODO: hint turn end, screen shake
+            cameraController.Shake();
+            // TODO: hint turn end
         }
     }
 }
