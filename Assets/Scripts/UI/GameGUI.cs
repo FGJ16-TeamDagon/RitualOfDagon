@@ -123,14 +123,26 @@ public class GameGUI : MonoBehaviour
 
     public void StrandedEnd()
     {
-        strandedCanvas.SetActive(true);
         uiCanvas.SetActive(false);
+        StartCoroutine(WaitForStrandEnd());
     }
 
     public void DeepOneEnd()
     {
-        deepOneCanvas.SetActive(true);
         uiCanvas.SetActive(false);
+        StartCoroutine(WaitForDeepEnd());
+    }
+
+    IEnumerator WaitForDeepEnd()
+    {
+        yield return new WaitForSeconds(3.0f);
+        deepOneCanvas.SetActive(true);
+    }
+
+    IEnumerator WaitForStrandEnd()
+    {
+        yield return new WaitForSeconds(3.0f);
+        strandedCanvas.SetActive(true);
     }
 
     public void ToggleSounds()
