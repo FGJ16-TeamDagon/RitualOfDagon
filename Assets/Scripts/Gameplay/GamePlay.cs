@@ -17,6 +17,8 @@ public class GamePlay : MonoBehaviour
 
     public static event System.Action GamestateChanged;
 
+    private GameCameraController cameraController;
+
     private static GamePlay instance;
     public static GamePlay Instance
     {
@@ -70,6 +72,7 @@ public class GamePlay : MonoBehaviour
 
     void Awake()
     {
+        cameraController = Camera.main.GetComponent<GameCameraController>();
         UnityEngine.SceneManagement.SceneManager.LoadScene("UI", UnityEngine.SceneManagement.LoadSceneMode.Additive);
         LeanTween.init();
     }
@@ -306,5 +309,40 @@ public class GamePlay : MonoBehaviour
     public void ShowPattern()
     {
         State = GameplayState.ShowPattern;
+    }
+
+    public void AutoSelectNext()
+    {
+        var current = GameCharacter.Selection;
+
+        int index = current == null ? 0 : CurrentPlayer.characters.IndexOf(current);
+
+        current = CurrentPlayer.characters[index];
+        int attempts = 0;
+
+        while (current.MovementLeft <= 0)
+        {
+            attempts++;
+            index++;
+            if (index >= CurrentPlayer.characters.Count) index = 0;
+
+            current = CurrentPlayer.characters[index];
+
+            if (attempts > CurrentPlayer.characters.Count)
+            {
+                current = null;
+                break;
+            }
+        }
+
+        GameCharacter.Selection = current;
+
+        Debug.Log("Auto selected " + index, current);
+
+        if (current == null)
+        {
+            cameraController.Shake();
+            // TODO: hint turn end
+        }
     }
 }

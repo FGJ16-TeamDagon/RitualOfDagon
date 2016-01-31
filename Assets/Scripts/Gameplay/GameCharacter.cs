@@ -236,5 +236,10 @@ public class GameCharacter : MonoBehaviour
         }
 
         usedMovementPoints = amount;
+
+        if (MovementLeft <= 0)
+        {
+            GamePlay.Instance.AutoSelectNext();
+        }
     }
 }
