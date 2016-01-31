@@ -35,8 +35,10 @@ public class GameCharacter : MonoBehaviour
     [SerializeField]
     private float moveTime = 0.5f;
 
-    private UnityEngine.UI.Image movementPointsFill;
+    public SoundManager.SoundEffect moveSound;
 
+    private UnityEngine.UI.Image movementPointsFill;
+    
     private static GameCharacter selection;
     public static GameCharacter Selection
     {
@@ -159,6 +161,7 @@ public class GameCharacter : MonoBehaviour
                 OnCompletePathStep();
             } ;
             if (moveParticles) moveParticles.Play();
+            SoundManager.Instance.PlaySound(moveSound);
         }
     }
 
@@ -214,6 +217,8 @@ public class GameCharacter : MonoBehaviour
             tween.onComplete = OnCompletePathStep;
 
             if (moveParticles) moveParticles.Play();
+
+            SoundManager.Instance.PlaySound(moveSound);
         }
         else
         {
