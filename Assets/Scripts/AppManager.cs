@@ -47,14 +47,16 @@ public class AppManager : MonoBehaviour
 
     public void StartLevel()
     {
-        SceneManager.LoadScene("Level01");
+        int levelNum = Random.Range(1, 10);
+        SceneManager.LoadScene("Level" + levelNum.ToString("0#"));
         Resources.UnloadUnusedAssets();
         System.GC.Collect();
     }
 
     public void RestartLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        StartLevel();
     }
 
     private void Update()
