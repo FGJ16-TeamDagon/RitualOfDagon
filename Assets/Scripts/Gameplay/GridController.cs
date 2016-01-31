@@ -103,11 +103,14 @@ public class GridController : MonoBehaviour
         {
             for (int z = 0; z < sizeZ; z++)
             {
-                var go = Instantiate<GameObject>(gridCellPrefab);
-                var cell = go.GetComponent<GridPosition>();
-                cell.SetGridPosition(x, z);
-                go.transform.SetParent(cellsParent, true);
-                points[x, z] = cell;
+                if (gridCellPrefab)
+                {
+                    var go = Instantiate<GameObject>(gridCellPrefab);
+                    var cell = go.GetComponent<GridPosition>();
+                    cell.SetGridPosition(x, z);
+                    go.transform.SetParent(cellsParent, true);
+                    points[x, z] = cell;
+                }
             }
         }
     }
@@ -170,6 +173,11 @@ public class GridController : MonoBehaviour
         {
             for (int z = 0; z < points.GetLength(1); z++)
             {
+                if (!points[x, z])
+                {
+                    continue;
+                }
+
                 RaycastHit hit;
                 Ray ray = new Ray(points[x, z].transform.position + Vector3.up, -Vector3.up);
                 if (Physics.Raycast(ray, out hit, 10))
