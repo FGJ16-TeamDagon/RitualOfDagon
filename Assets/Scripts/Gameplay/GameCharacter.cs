@@ -28,9 +28,7 @@ public class GameCharacter : MonoBehaviour
     }
 
     public static event System.Action<SelectionEvent> Selected;
-
-    private float movementFill = 1;
-
+    
     LTDescr tween;
     List<GridPosition> path;
     int pathIndex;
@@ -113,6 +111,11 @@ public class GameCharacter : MonoBehaviour
     public void HandleSelected(bool selected)
     {
         selectionIndicator.SetActive(selected);
+
+        if (movementPointsFill)
+        {
+            movementPointsFill.fillAmount = (float)MovementLeft / (float)movementPoints;
+        }
     }
 
     public void MoveTowards(GridPosition target)
@@ -123,8 +126,6 @@ public class GameCharacter : MonoBehaviour
             return;
         }
 
-        if (tween != null) LeanTween.cancel(tween.id);
-
         var lookPos = target.GetWorldPos();
         lookPos.y = transform.position.y;
         transform.LookAt(lookPos);
@@ -133,6 +134,8 @@ public class GameCharacter : MonoBehaviour
 
         if (path.Count > 0)
         {
+            if (tween != null) LeanTween.cancel(tween.id);
+
             SetUsedMovementPoint(usedMovementPoints + 1);
             tween = LeanTween.move(gameObject, path[0].GetWorldPos(), moveTime);
             tween.setEase(LeanTweenType.easeInOutQuad);
@@ -151,7 +154,14 @@ public class GameCharacter : MonoBehaviour
     {
         if (movementPointsFill && movementPointsFill.gameObject.activeInHierarchy)
         {
-            movementPointsFill.fillAmount = Mathf.MoveTowards(movementPointsFill.fillAmount, movementFill, Time.deltaTime);
+            var targetFill = (float)MovementLeft / (float)movementPoints;
+            movementPointsFill.fillAmount = Mathf.MoveTowards(movementPointsFill.fillAmount, targetFill, Time.deltaTime);
+
+            if (movementPointsFill.fillAmount <= 0)
+            {
+                selectionIndicator.SetActive(false);
+                selectionIndicatorBG.SetActive(false);
+            }
         }
     }
 
@@ -165,16 +175,25 @@ public class GameCharacter : MonoBehaviour
             && GamePlay.Instance.State == GamePlay.GameplayState.Playing
             && MovementLeft > 0)
         {
+            
+            var target = path[pathIndex];
+
+            if (target.occupant != null)
+            {
+                path = null;
+                return;
+            }
+
             if (tween != null) LeanTween.cancel(tween.id);
 
-            tween = LeanTween.move(gameObject, path[pathIndex].GetWorldPos(), moveTime);
+            var targetPos = target.GetWorldPos();
+            tween = LeanTween.move(gameObject, target.GetWorldPos(), moveTime);
             tween.setEase(LeanTweenType.easeInOutQuad);
             Position.occupant = null;
             Position = path[pathIndex];
             Position.occupant = gameObject;
-            var lookPos = path[pathIndex].GetWorldPos();
-            lookPos.y = transform.position.y;
-            transform.LookAt(lookPos);
+            targetPos.y = transform.position.y;
+            transform.LookAt(targetPos);
             SetUsedMovementPoint(usedMovementPoints + 1);
 
             tween.onComplete = OnCompletePathStep;
@@ -200,15 +219,5 @@ public class GameCharacter : MonoBehaviour
         }
 
         usedMovementPoints = amount;
-
-        if (MovementLeft <= 0)
-        {
-            selectionIndicator.SetActive(false);
-            selectionIndicatorBG.SetActive(false);
-        }
-        else
-        {
-            movementFill = (float)MovementLeft / (float)movementPoints;
-        }
     }
 }
