@@ -282,6 +282,7 @@ public class GamePlay : MonoBehaviour
         State = GameplayState.GameOver;
         ritualEffect.StartEffect(Ritual);
         GameGUI.Instance.DeepOneEnd();
+        cameraController.Shake();
     }
 
     private void StrandedVictory()
