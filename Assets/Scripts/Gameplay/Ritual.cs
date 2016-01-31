@@ -56,7 +56,12 @@ public class Ritual
         {
             for (int j = 0; j < characters.Count; j ++)
             {
-               if (characters[j].Position.X == startX + pattern[i].X &&
+                if (characters[j] == null)
+                {
+                    continue;
+                }
+
+                if (characters[j].Position.X == startX + pattern[i].X &&
                     characters[j].Position.Z == startZ + pattern[i].Z)
                 {
                     fit++;

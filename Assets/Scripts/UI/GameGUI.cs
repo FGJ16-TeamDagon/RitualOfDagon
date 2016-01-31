@@ -89,7 +89,26 @@ public class GameGUI : MonoBehaviour
             }
             else
             {
-                turnsLeftDisplay.text = GamePlay.Instance.TurnsLeft + " turns to complete ritual";
+                if (GamePlay.Instance.TurnsLeft == 1)
+                {
+                    turnsLeftDisplay.text = "Last chance to complete ritual!";
+                }
+                else
+                {
+                    turnsLeftDisplay.text = GamePlay.Instance.TurnsLeft + " turns to complete ritual";
+                }
+            }
+        }
+        else if (GamePlay.Instance.State == GamePlay.GameplayState.GameOver)
+        {
+            if (GamePlay.Instance.Winner == GamePlay.Instance.StrandedPlayer)
+            {
+                turnsLeftDisplay.text = "The Ritual failed!";
+                
+            }
+            else
+            {
+                turnsLeftDisplay.text = "The Ritual succeeds!";
             }
         }
     }
