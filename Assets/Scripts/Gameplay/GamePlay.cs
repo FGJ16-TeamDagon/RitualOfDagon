@@ -134,6 +134,7 @@ public class GamePlay : MonoBehaviour
 
         CurrentPlayer = DeepOnesPlayer;
         State = GameplayState.Playing;
+        GameCharacter.Selection = DeepOnesPlayer.characters[0];
     }
 
     private GameObject touchStartObject;
@@ -241,6 +242,10 @@ public class GamePlay : MonoBehaviour
             if (TurnsLeft <= 0)
             {
                 StrandedVictory();
+            }
+            else
+            {
+                GameCharacter.Selection = DeepOnesPlayer.characters[0];
             }
         }
     }
