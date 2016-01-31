@@ -7,7 +7,6 @@ public class GridPosition : MonoBehaviour
     public int Z { get; private set; }
 
     const float gridCellSize = 1;
-    static readonly Vector3 gridOffset = new Vector3(-3,0,-3);
 
     public void SetGridPosition(int x, int z)
     {
@@ -23,7 +22,7 @@ public class GridPosition : MonoBehaviour
 
     public Vector3 GetWorldPos()
     {
-        return gridOffset + gridCellSize * new Vector3(X, 0, Z);
+        return GamePlay.Instance.grid.GridOffset + gridCellSize * new Vector3(X, 0, Z);
     }
 
     public bool ContainsPoint(Vector3 point)

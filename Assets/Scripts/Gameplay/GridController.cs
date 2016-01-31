@@ -12,6 +12,7 @@ public class GridController : MonoBehaviour
 
     public int sizeX = 8;
     public int sizeZ = 8;
+    public Vector3 GridOffset { get; private set; }
 
     private List<LineRenderer> lines;
 
@@ -20,11 +21,58 @@ public class GridController : MonoBehaviour
 
     public GridPosition[,] points;
 
+    private Color gridColor;
+    private Color gridTargetColor;
+    private Color gridColorTweenStartColor;
+    private LTDescr colorTween;
+    private float linesAlpha = 0.3f;
+
     void Start()
     {
+        GridOffset = new Vector3(1 - sizeX * 0.5f, 0, 1 - sizeZ * 0.5f);
+
         CreateLines();
         CreateCells();
         OccupyCells();
+    }
+
+    void OnEnable()
+    {
+        GamePlay.GamestateChanged += GamePlay_GamestateChanged;
+    }
+
+    void OnDisable()
+    {
+        GamePlay.GamestateChanged -= GamePlay_GamestateChanged;
+    }
+
+    private void GamePlay_GamestateChanged()
+    {
+        if (GamePlay.Instance.State == GamePlay.GameplayState.Playing)
+        {
+            gridColorTweenStartColor = gridColor;
+
+            if (GamePlay.Instance.CurrentPlayer == GamePlay.Instance.DeepOnesPlayer)
+            {
+                gridTargetColor = Player.DeepOneColorDark;
+            }
+            else
+            {
+                gridTargetColor = Player.StrandedColorDark;
+            }
+            gridTargetColor.a = linesAlpha;
+
+            if (colorTween != null) LeanTween.cancel(colorTween.id);
+
+            colorTween = LeanTween.value(gameObject, (c) => {
+                gridColor = c;
+               
+                for (int i = 0; i < lines.Count; i++)
+                {
+                    lines[i].SetColors(gridColor, gridColor);
+                }
+            }, gridColorTweenStartColor, gridTargetColor, 1f);
+        }
     }
 
     void CreateLines()
@@ -58,11 +106,14 @@ public class GridController : MonoBehaviour
         {
             for (int z = 0; z < sizeZ; z++)
             {
-                var go = Instantiate<GameObject>(gridCellPrefab);
-                var cell = go.GetComponent<GridPosition>();
-                cell.SetGridPosition(x, z);
-                go.transform.SetParent(cellsParent, true);
-                points[x, z] = cell;
+                if (gridCellPrefab)
+                {
+                    var go = Instantiate<GameObject>(gridCellPrefab);
+                    var cell = go.GetComponent<GridPosition>();
+                    cell.SetGridPosition(x, z);
+                    go.transform.SetParent(cellsParent, true);
+                    points[x, z] = cell;
+                }
             }
         }
     }
@@ -125,6 +176,11 @@ public class GridController : MonoBehaviour
         {
             for (int z = 0; z < points.GetLength(1); z++)
             {
+                if (!points[x, z])
+                {
+                    continue;
+                }
+
                 RaycastHit hit;
                 Ray ray = new Ray(points[x, z].transform.position + Vector3.up, -Vector3.up);
                 if (Physics.Raycast(ray, out hit, 10))

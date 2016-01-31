@@ -82,7 +82,7 @@ public class GameCharacter : MonoBehaviour
         }
         else
         {
-            selectionIndicatorBG.SetActive(false);
+            if (selectionIndicatorBG) selectionIndicatorBG.SetActive(false);
         }
     }
 
@@ -110,14 +110,14 @@ public class GameCharacter : MonoBehaviour
 
     public void HandleSelected(bool selected)
     {
-        selectionIndicator.SetActive(selected);
+        if (selectionIndicator) selectionIndicator.SetActive(selected);
 
         if (movementPointsFill)
         {
             movementPointsFill.fillAmount = (float)MovementLeft / (float)movementPoints;
         }
 
-        if (MovementLeft > 0)
+        if (MovementLeft > 0 && selectionIndicatorBG)
         {
             selectionIndicatorBG.SetActive(true);
         }
@@ -218,14 +218,14 @@ public class GameCharacter : MonoBehaviour
 
     private void Reset()
     {
-        selectionIndicatorBG.SetActive(true);
+        if (selectionIndicatorBG) selectionIndicatorBG.SetActive(true);
         if (movementPointsFill) movementPointsFill.fillAmount = 1;
         SetUsedMovementPoint(0);
     }
 
     void SetUsedMovementPoint(int amount)
     {
-        if (movementPointsFill == null)
+        if (movementPointsFill == null && selectionIndicator)
         {
             movementPointsFill = selectionIndicator.GetComponent<UnityEngine.UI.Image>();
         }

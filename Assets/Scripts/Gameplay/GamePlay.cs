@@ -53,7 +53,7 @@ public class GamePlay : MonoBehaviour
     }
     public GridController grid;
 
-    public Ritual ritual;
+    public Ritual Ritual { get; private set; }
 
     public int CurrentTurn { get; private set; }
     public int MaxTurns { get; private set; }
@@ -71,6 +71,7 @@ public class GamePlay : MonoBehaviour
     void Awake()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("UI", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+        LeanTween.init();
     }
 
     void Start()
@@ -80,8 +81,8 @@ public class GamePlay : MonoBehaviour
 
         var ritualFactory = new RitualFactory();
 
-        ritual = ritualFactory.GetRandomRitual();
-        Debug.Log(ritual.image.name);
+        Ritual = ritualFactory.GetRandomRitual();
+        Debug.Log(Ritual.image.name);
 
         var characters = RandomPermutation(FindObjectsOfType<GameCharacter>());
 
@@ -93,7 +94,7 @@ public class GamePlay : MonoBehaviour
             }
             else if (character.gameObject.tag.ToLower() == "deepone")
             {
-                if (DeepOnesPlayer.characters.Count < ritual.pattern.Length)
+                if (DeepOnesPlayer.characters.Count < Ritual.pattern.Length)
                 {
                     DeepOnesPlayer.characters.Add(character);
                 }
@@ -104,7 +105,7 @@ public class GamePlay : MonoBehaviour
             }
         }
 
-        MaxTurns = Mathf.FloorToInt(ritual.pattern.Length * 0.5f) + 3;
+        MaxTurns = Mathf.FloorToInt(Ritual.pattern.Length * 0.5f) + 3;
 
         State = GameplayState.Ready;
 
@@ -134,6 +135,7 @@ public class GamePlay : MonoBehaviour
 
         CurrentPlayer = DeepOnesPlayer;
         State = GameplayState.Playing;
+        GameCharacter.Selection = DeepOnesPlayer.characters[0];
     }
 
     private GameObject touchStartObject;
@@ -242,6 +244,10 @@ public class GamePlay : MonoBehaviour
             {
                 StrandedVictory();
             }
+            else
+            {
+                GameCharacter.Selection = DeepOnesPlayer.characters[0];
+            }
         }
     }
 
@@ -250,9 +256,9 @@ public class GamePlay : MonoBehaviour
         if (CurrentPlayer == DeepOnesPlayer)
         {
             CurrentPlayer = StrandedPlayer;
-            var bestFit = ritual.BestFit(DeepOnesPlayer.characters);
-            Debug.Log("Ritual fit: " + bestFit + "/" + ritual.pattern.Length);
-            if (bestFit >= ritual.pattern.Length)
+            var bestFit = Ritual.BestFit(DeepOnesPlayer.characters);
+            Debug.Log("Ritual fit: " + bestFit + "/" + Ritual.pattern.Length);
+            if (bestFit >= Ritual.pattern.Length)
             {
                 DeepOneVictory();
             }
@@ -268,7 +274,7 @@ public class GamePlay : MonoBehaviour
     private void DeepOneVictory()
     {
         State = GameplayState.GameOver;
-        ritualEffect.StartEffect(ritual);
+        ritualEffect.StartEffect(Ritual);
     }
 
     private void StrandedVictory()
