@@ -56,8 +56,9 @@ public class Ritual
         {
             for (int j = 0; j < characters.Count; j ++)
             {
-                if (characters[j] == null)
+                if (characters[j] == null || characters[j].Position == null)
                 {
+                    Debug.LogError("Something fishy here!", characters[j]);
                     continue;
                 }
 
