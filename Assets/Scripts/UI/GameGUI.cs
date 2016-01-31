@@ -39,6 +39,8 @@ public class GameGUI : MonoBehaviour
     void Start()
     {
         StartGame(); // TODO: show pattern at start, then call this
+
+        AudioListener.volume = PlayerPrefs.GetFloat("AudioListener.volume", 1);
     }
 
     public void EndTurn()
@@ -129,5 +131,12 @@ public class GameGUI : MonoBehaviour
     {
         deepOneCanvas.SetActive(true);
         uiCanvas.SetActive(false);
+    }
+
+    public void ToggleSounds()
+    {
+        AudioListener.volume = AudioListener.volume > 0 ? 0 : 1;
+
+        PlayerPrefs.SetFloat("AudioListener.volume", AudioListener.volume);
     }
 }
