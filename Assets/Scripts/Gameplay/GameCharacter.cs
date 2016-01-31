@@ -147,7 +147,7 @@ public class GameCharacter : MonoBehaviour
 
         if (path.Count > 0)
         {
-            if (tween != null) LeanTween.cancel(tween.id);
+            if (tween != null) LeanTween.cancel(gameObject);
 
             SetUsedMovementPoint(usedMovementPoints + 1);
             tween = LeanTween.move(gameObject, path[0].GetWorldPos(), moveTime);
@@ -167,6 +167,11 @@ public class GameCharacter : MonoBehaviour
 
     void Update()
     {
+        if (selectionIndicatorBG && MovementLeft <= 0)
+        {
+            selectionIndicatorBG.SetActive(false);
+        }
+
         if (movementPointsFill)
         {
             if (movementPointsFill.fillAmount <= 0)
@@ -208,7 +213,7 @@ public class GameCharacter : MonoBehaviour
                 return;
             }
 
-            if (tween != null) LeanTween.cancel(tween.id);
+            if (tween != null) LeanTween.cancel(gameObject);
 
             var targetPos = target.GetWorldPos();
             tween = LeanTween.move(gameObject, target.GetWorldPos(), moveTime);
