@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class GameGUI : MonoBehaviour 
 {
     public GameObject optionsPanel;
+    public Image patternImage;
 
     public enum GUIState
     {
@@ -93,5 +94,6 @@ public class GameGUI : MonoBehaviour
     public void StartGame()
     {
         GamePlay.Instance.StartGame();
+        patternImage.sprite = Sprite.Create(GamePlay.Instance.ritual.image, new Rect(0,0, GamePlay.Instance.ritual.image.width, GamePlay.Instance.ritual.image.height),new Vector2(0.5f,0.5f));
     }
 }
