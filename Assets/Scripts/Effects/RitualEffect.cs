@@ -12,7 +12,7 @@ public class RitualEffect : MonoBehaviour
 
     private Vector3[] lineVertexPositions;
 
-    public void StartEffect(Ritual ritual)
+    public void Start()
     {
         transform.position = GamePlay.Instance.DeepOnesPlayer.characters[0].transform.position;
 
@@ -42,9 +42,9 @@ public class RitualEffect : MonoBehaviour
             for (int i = 0; i < lineVertexPositions.Length; i++)
             {
                 lineRenderer.SetPosition(i, lineVertexPositions[i] + new Vector3(
-                    UnityEngine.Random.value * 0.01f - 0.005f,
-                    UnityEngine.Random.value * 0.01f,
-                    UnityEngine.Random.value * 0.01f - 0.005f
+                    UnityEngine.Random.value * 0.2f - 0.1f,
+                    UnityEngine.Random.value * 0.2f,
+                    UnityEngine.Random.value * 0.2f - 0.1f
                     ));
             }
         }

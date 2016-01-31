@@ -8,6 +8,7 @@ public class GameGUI : MonoBehaviour
     public Image patternImage;
     public GameObject strandedCanvas;
     public GameObject deepOneCanvas;
+    public GameObject uiCanvas;
 
     public enum GUIState
     {
@@ -38,6 +39,8 @@ public class GameGUI : MonoBehaviour
     void Start()
     {
         StartGame(); // TODO: show pattern at start, then call this
+
+        AudioListener.volume = PlayerPrefs.GetFloat("AudioListener.volume", 1);
     }
 
     public void EndTurn()
@@ -88,7 +91,26 @@ public class GameGUI : MonoBehaviour
             }
             else
             {
-                turnsLeftDisplay.text = GamePlay.Instance.TurnsLeft + " turns to complete ritual";
+                if (GamePlay.Instance.TurnsLeft == 1)
+                {
+                    turnsLeftDisplay.text = "Last chance to complete ritual!";
+                }
+                else
+                {
+                    turnsLeftDisplay.text = GamePlay.Instance.TurnsLeft + " turns to complete ritual";
+                }
+            }
+        }
+        else if (GamePlay.Instance.State == GamePlay.GameplayState.GameOver)
+        {
+            if (GamePlay.Instance.Winner == GamePlay.Instance.StrandedPlayer)
+            {
+                turnsLeftDisplay.text = "The Ritual failed!";
+                
+            }
+            else
+            {
+                turnsLeftDisplay.text = "The Ritual succeeds!";
             }
         }
     }
@@ -101,11 +123,32 @@ public class GameGUI : MonoBehaviour
 
     public void StrandedEnd()
     {
-        strandedCanvas.SetActive(true);
+        uiCanvas.SetActive(false);
+        StartCoroutine(WaitForStrandEnd());
     }
 
     public void DeepOneEnd()
     {
+        uiCanvas.SetActive(false);
+        StartCoroutine(WaitForDeepEnd());
+    }
+
+    IEnumerator WaitForDeepEnd()
+    {
+        yield return new WaitForSeconds(3.0f);
         deepOneCanvas.SetActive(true);
+    }
+
+    IEnumerator WaitForStrandEnd()
+    {
+        yield return new WaitForSeconds(3.0f);
+        strandedCanvas.SetActive(true);
+    }
+
+    public void ToggleSounds()
+    {
+        AudioListener.volume = AudioListener.volume > 0 ? 0 : 1;
+
+        PlayerPrefs.SetFloat("AudioListener.volume", AudioListener.volume);
     }
 }

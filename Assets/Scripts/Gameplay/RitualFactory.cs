@@ -53,7 +53,7 @@ public class RitualFactory
             case 5:
                 pattern = new Ritual.Point[6];
                 pattern[0] = new Ritual.Point(0, 0);
-                pattern[1] = new Ritual.Point(1, 0);
+                pattern[1] = new Ritual.Point(1, -1);
                 pattern[2] = new Ritual.Point(1, 1);
                 pattern[3] = new Ritual.Point(2, -1);
                 pattern[4] = new Ritual.Point(2, 1);

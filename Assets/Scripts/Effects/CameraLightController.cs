@@ -62,13 +62,40 @@ public class CameraLightController : MonoBehaviour
                 RenderSettings.ambientLight = Color.Lerp(RenderSettings.ambientLight, ambientColor, v);
             }, 0, 1, Time.deltaTime * 3f);
         }
+        else if (GamePlay.Instance.State == GamePlay.GameplayState.GameOver)
+        {
+            if (GamePlay.Instance.Winner == GamePlay.Instance.StrandedPlayer)
+            {
+                lightIntensity = 5;
+                lightRange = 40;
+                if (ambientColorTween != null) LeanTween.cancel(ambientColorTween.id);
+
+                ambientColorTween = LeanTween.value(gameObject, (v) => {
+                    RenderSettings.ambientLight = Color.Lerp(RenderSettings.ambientLight, Color.white, v);
+                }, 0, 1, Time.deltaTime * 5f);
+
+                ambientIntensity = 1;
+            }
+            else 
+            {
+                lightIntensity = 0.2f;
+                lightRange = 4.5f;
+                if (ambientColorTween != null) LeanTween.cancel(ambientColorTween.id);
+
+                ambientColorTween = LeanTween.value(gameObject, (v) => {
+                    RenderSettings.ambientLight = Color.Lerp(RenderSettings.ambientLight, Color.red, v);
+                }, 0, 1, Time.deltaTime * 4f);
+
+                ambientIntensity = 0.2f;
+            }
+        }
     }
 
     void Update()
     {
         targetLight.intensity = Mathf.MoveTowards(targetLight.intensity, lightIntensity, Time.deltaTime * 2);
         targetLight.range = Mathf.MoveTowards(targetLight.range, lightRange, Time.deltaTime * 2);
-        RenderSettings.ambientIntensity = Mathf.MoveTowards(RenderSettings.ambientIntensity, ambientIntensity, Time.deltaTime * 2);
+        RenderSettings.ambientIntensity = Mathf.MoveTowards(RenderSettings.ambientIntensity, ambientIntensity, Time.deltaTime * 0.25f);
     }
 
     private void LateUpdate()
