@@ -116,6 +116,15 @@ public class GameCharacter : MonoBehaviour
         {
             movementPointsFill.fillAmount = (float)MovementLeft / (float)movementPoints;
         }
+
+        if (MovementLeft > 0)
+        {
+            selectionIndicatorBG.SetActive(true);
+        }
+        else
+        {
+            selectionIndicatorBG.SetActive(false);
+        }
     }
 
     public void MoveTowards(GridPosition target)
@@ -152,15 +161,18 @@ public class GameCharacter : MonoBehaviour
 
     void Update()
     {
-        if (movementPointsFill && movementPointsFill.gameObject.activeInHierarchy)
+        if (movementPointsFill)
         {
-            var targetFill = (float)MovementLeft / (float)movementPoints;
-            movementPointsFill.fillAmount = Mathf.MoveTowards(movementPointsFill.fillAmount, targetFill, Time.deltaTime);
-
             if (movementPointsFill.fillAmount <= 0)
             {
                 selectionIndicator.SetActive(false);
                 selectionIndicatorBG.SetActive(false);
+            }
+
+            if (movementPointsFill.gameObject.activeInHierarchy)
+            {
+                var targetFill = (float)MovementLeft / (float)movementPoints;
+                movementPointsFill.fillAmount = Mathf.MoveTowards(movementPointsFill.fillAmount, targetFill, Time.deltaTime);
             }
         }
     }
