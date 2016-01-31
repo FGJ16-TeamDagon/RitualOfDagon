@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class StartMenu : MonoBehaviour
 {
@@ -29,5 +30,15 @@ public class StartMenu : MonoBehaviour
     public void MainMenu()
     {
         AppManager.Instance.GoToStartMenu();
+    }
+
+    public void StrandedWin()
+    {
+        SceneManager.LoadScene("StrandedWin");
+    }
+
+    public void DeepOneWin()
+    {
+        SceneManager.LoadScene("DeepOneWin");
     }
 }
