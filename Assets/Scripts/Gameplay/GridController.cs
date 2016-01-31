@@ -12,6 +12,7 @@ public class GridController : MonoBehaviour
 
     public int sizeX = 8;
     public int sizeZ = 8;
+    public Vector3 GridOffset { get; private set; }
 
     private List<LineRenderer> lines;
 
@@ -28,6 +29,8 @@ public class GridController : MonoBehaviour
 
     void Start()
     {
+        GridOffset = new Vector3(1 - sizeX * 0.5f, 0, 1 - sizeZ * 0.5f);
+
         CreateLines();
         CreateCells();
         OccupyCells();
